@@ -1,6 +1,6 @@
 import React from 'react';
 import { BudgetCalculation } from '../types/budget';
-import { formatCurrency, formatDate } from '../utils/budgetCalculator';
+import { formatCurrency, formatDate, calculateDaysFromToday } from '../utils/budgetCalculator';
 
 interface ResultsDisplayProps {
   calculation: BudgetCalculation | null;
@@ -12,6 +12,7 @@ export function ResultsDisplay({ calculation }: ResultsDisplayProps) {
   const { result, timestamp } = calculation;
   const date = new Date(timestamp).toLocaleDateString();
   const time = new Date(timestamp).toLocaleTimeString();
+  const daysFromToday = calculateDaysFromToday(result.endDate);
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md space-y-4">
@@ -35,10 +36,15 @@ export function ResultsDisplay({ calculation }: ResultsDisplayProps) {
           </div>
           <div>
             <span className="text-gray-600">End Date:</span>
-            <span className="ml-2 font-medium">{formatDate(result.endDate)}</span>
+            <div className="flex items-center justify-between">
+              <span className="ml-2 font-medium">{formatDate(result.endDate)}</span>
+              <span className="text-sm text-blue-600">
+                ({daysFromToday} days from today)
+              </span>
+            </div>
           </div>
           <div className="col-span-2">
-            <span className="text-gray-600">Days Remaining:</span>
+            <span className="text-gray-600">Campaign Duration:</span>
             <span className="ml-2 font-medium">{result.daysRemaining} days</span>
           </div>
         </div>
