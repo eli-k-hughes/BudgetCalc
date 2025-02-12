@@ -1,6 +1,6 @@
 import React from 'react';
 import { BudgetCalculation } from '../types/budget';
-import { formatCurrency } from '../utils/budgetCalculator';
+import { formatCurrency, formatDate } from '../utils/budgetCalculator';
 
 interface ResultsDisplayProps {
   calculation: BudgetCalculation | null;
@@ -23,6 +23,24 @@ export function ResultsDisplay({ calculation }: ResultsDisplayProps) {
           <span className="text-2xl font-bold text-blue-800">
             {formatCurrency(result.total)}
           </span>
+        </div>
+      </div>
+
+      <div className="bg-gray-50 p-4 rounded-md space-y-2">
+        <h4 className="text-sm font-medium text-gray-700">Campaign Duration</h4>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <span className="text-gray-600">Start Date:</span>
+            <span className="ml-2 font-medium">{formatDate(result.startDate)}</span>
+          </div>
+          <div>
+            <span className="text-gray-600">End Date:</span>
+            <span className="ml-2 font-medium">{formatDate(result.endDate)}</span>
+          </div>
+          <div className="col-span-2">
+            <span className="text-gray-600">Days Remaining:</span>
+            <span className="ml-2 font-medium">{result.daysRemaining} days</span>
+          </div>
         </div>
       </div>
 

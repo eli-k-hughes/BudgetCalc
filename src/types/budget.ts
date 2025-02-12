@@ -6,7 +6,8 @@ export interface CampaignSplit {
 export interface BudgetInputs {
   currentSpend: number;
   totalMonthlyBudget: number;
-  daysRemaining: number;
+  campaignStartDate: Date;
+  campaignEndDate: Date;
   campaignSplits: CampaignSplit[];
 }
 
@@ -15,6 +16,9 @@ export interface DailyBudget {
   byCampaign: {
     [key: string]: number;
   };
+  daysRemaining: number;
+  startDate: Date;
+  endDate: Date;
 }
 
 export interface BudgetCalculation {

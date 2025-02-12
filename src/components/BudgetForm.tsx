@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { BudgetInputs, CampaignSplit } from '../types/budget';
 
 interface BudgetFormProps {
@@ -16,7 +18,12 @@ const DEFAULT_CAMPAIGNS: CampaignSplit[] = [
 export function BudgetForm({ onSubmit, isLoading = false, error = null }: BudgetFormProps) {
   const [currentSpend, setCurrentSpend] = useState<string>('');
   const [totalMonthlyBudget, setTotalMonthlyBudget] = useState<string>('');
-  const [daysRemaining, setDaysRemaining] = useState<string>('');
+  const [campaignStartDate, setCampaignStartDate] = useState<Date>(new Date());
+  const [campaignEndDate, setCampaignEndDate] = useState<Date>(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 30); // Default to 30 days from now
+    return date;
+  });
   const [campaignSplits, setCampaignSplits] = useState<CampaignSplit[]>(DEFAULT_CAMPAIGNS);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -25,7 +32,8 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
     const inputs: BudgetInputs = {
       currentSpend: parseFloat(currentSpend),
       totalMonthlyBudget: parseFloat(totalMonthlyBudget),
-      daysRemaining: parseInt(daysRemaining, 10),
+      campaignStartDate,
+      campaignEndDate,
       campaignSplits,
     };
 
@@ -39,6 +47,24 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
       percentage: parseFloat(value) || 0,
     };
     setCampaignSplits(newSplits);
+  };
+
+  const handleStartDateChange = (date: Date | null) => {
+    if (date) {
+      setCampaignStartDate(date);
+      // If end date is before new start date, update it
+      if (campaignEndDate < date) {
+        const newEndDate = new Date(date);
+        newEndDate.setDate(date.getDate() + 30);
+        setCampaignEndDate(newEndDate);
+      }
+    }
+  };
+
+  const handleEndDateChange = (date: Date | null) => {
+    if (date) {
+      setCampaignEndDate(date);
+    }
   };
 
   return (
@@ -84,20 +110,33 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
           />
         </div>
 
-        <div>
-          <label htmlFor="daysRemaining" className="block text-sm font-medium text-gray-700">
-            Days Remaining
-          </label>
-          <input
-            type="number"
-            id="daysRemaining"
-            value={daysRemaining}
-            onChange={(e) => setDaysRemaining(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            required
-            min="1"
-            step="1"
-          />
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Start Date
+            </label>
+            <DatePicker
+              selected={campaignStartDate}
+              onChange={handleStartDateChange}
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              dateFormat="MMMM d, yyyy"
+              minDate={new Date()}
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              End Date
+            </label>
+            <DatePicker
+              selected={campaignEndDate}
+              onChange={handleEndDateChange}
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              dateFormat="MMMM d, yyyy"
+              minDate={campaignStartDate}
+              required
+            />
+          </div>
         </div>
 
         <div className="space-y-2">
