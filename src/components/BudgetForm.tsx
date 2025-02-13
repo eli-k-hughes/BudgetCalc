@@ -409,20 +409,20 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                   </div>
                 </div>
               ) : (
-                <div className="h-9 flex items-center">
-                  <button
-                    type="button"
-                    onClick={() => setIsAddingCampaign(true)}
-                    className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center"
-                  >
-                    <div className="w-[32px] flex justify-center">
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button
+                  type="button"
+                  onClick={() => setIsAddingCampaign(true)}
+                  className="w-full focus:outline-none"
+                >
+                  <div className="grid grid-cols-[32px,160px,auto] items-center h-9">
+                    <div className="flex justify-center">
+                      <svg className="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                       </svg>
                     </div>
-                    <span className="pl-1">Add Campaign</span>
-                  </button>
-                </div>
+                    <span className="text-blue-600 hover:text-blue-800 pl-1">Add Campaign</span>
+                  </div>
+                </button>
               )}
             </div>
             <div className="flex items-start justify-end">
