@@ -310,98 +310,110 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
               {inputMode === 'percentage' ? (
                 // Percentage inputs
                 campaignSplits.map((split, index) => (
-                  <div key={split.name} className="flex items-center space-x-3">
-                    <span className="w-28 text-gray-600">{split.name}</span>
-                    <input
-                      type="number"
-                      value={split.percentage}
-                      onChange={(e) => handleCampaignSplitChange(index, e.target.value)}
-                      className="w-16 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      required
-                      min="0"
-                      max="100"
-                      step="1"
-                    />
-                    <span className="text-gray-500">%</span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveCampaign(index)}
-                      className="text-red-500 hover:text-red-700 focus:outline-none"
-                    >
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
+                  <div key={split.name} className="flex items-center h-9">
+                    <span className="w-32 text-gray-600">{split.name}</span>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        value={split.percentage}
+                        onChange={(e) => handleCampaignSplitChange(index, e.target.value)}
+                        className="w-20 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        required
+                        min="0"
+                        max="100"
+                        step="1"
+                      />
+                      <span className="w-8 text-gray-500 ml-2">%</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCampaign(index)}
+                        className="text-red-500 hover:text-red-700 focus:outline-none ml-2"
+                        aria-label="Remove campaign"
+                      >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 ))
               ) : (
                 // Budget inputs
                 campaignBudgets.map((camp, index) => (
-                  <div key={camp.name} className="flex items-center space-x-3">
-                    <span className="w-28 text-gray-600">{camp.name}</span>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                      <input
-                        type="number"
-                        value={camp.budget}
-                        onChange={(e) => handleCampaignBudgetChange(index, e.target.value)}
-                        className="w-24 pl-7 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        required
-                        min="0"
-                        step="0.01"
-                      />
+                  <div key={camp.name} className="flex items-center h-9">
+                    <span className="w-32 text-gray-600">{camp.name}</span>
+                    <div className="flex items-center">
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                        <input
+                          type="number"
+                          value={camp.budget}
+                          onChange={(e) => handleCampaignBudgetChange(index, e.target.value)}
+                          className="w-24 pl-7 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          required
+                          min="0"
+                          step="0.01"
+                        />
+                      </div>
+                      <span className="text-gray-500 w-16 ml-2">({camp.percentage}%)</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCampaign(index)}
+                        className="text-red-500 hover:text-red-700 focus:outline-none ml-2"
+                        aria-label="Remove campaign"
+                      >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
                     </div>
-                    <span className="text-gray-500 w-16">({camp.percentage}%)</span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveCampaign(index)}
-                      className="text-red-500 hover:text-red-700 focus:outline-none"
-                    >
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
                   </div>
                 ))
               )}
 
               {/* Add Campaign Button */}
               {isAddingCampaign ? (
-                <div className="flex items-center space-x-3">
-                  <input
-                    type="text"
-                    value={newCampaignName}
-                    onChange={(e) => setNewCampaignName(e.target.value)}
-                    placeholder="Campaign name"
-                    className="w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddCampaign}
-                    className="text-green-600 hover:text-green-700 focus:outline-none"
-                  >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsAddingCampaign(false);
-                      setNewCampaignName('');
-                    }}
-                    className="text-red-500 hover:text-red-700 focus:outline-none"
-                  >
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+                <div className="flex items-center h-9">
+                  <div className="w-32">
+                    <input
+                      type="text"
+                      value={newCampaignName}
+                      onChange={(e) => setNewCampaignName(e.target.value)}
+                      placeholder="Campaign name"
+                      className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="flex items-center ml-2">
+                    <button
+                      type="button"
+                      onClick={handleAddCampaign}
+                      className="text-green-600 hover:text-green-700 focus:outline-none"
+                      aria-label="Confirm add campaign"
+                    >
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsAddingCampaign(false);
+                        setNewCampaignName('');
+                      }}
+                      className="text-red-500 hover:text-red-700 focus:outline-none ml-2"
+                      aria-label="Cancel add campaign"
+                    >
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <button
                   type="button"
                   onClick={() => setIsAddingCampaign(true)}
-                  className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 focus:outline-none"
+                  className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 focus:outline-none h-9"
                 >
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
