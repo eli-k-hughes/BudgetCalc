@@ -311,7 +311,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                 // Percentage inputs with strict column alignment
                 <div className="space-y-1">
                   {campaignSplits.map((split, index) => (
-                    <div key={split.name} className="grid grid-cols-[32px,160px,60px,24px] items-center h-9">
+                    <div key={split.name} className="grid grid-cols-[32px,160px,60px,24px] items-center h-9 group">
                       <button
                         type="button"
                         onClick={() => handleRemoveCampaign(index)}
@@ -322,7 +322,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
-                      <span className="text-gray-600 pl-[2px]">{split.name}</span>
+                      <span className="text-gray-600 pl-[2px] group-hover:text-red-600">{split.name}</span>
                       <input
                         type="number"
                         value={split.percentage}
@@ -341,7 +341,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                 // Budget inputs with strict column alignment
                 <div className="space-y-1">
                   {campaignBudgets.map((camp, index) => (
-                    <div key={camp.name} className="grid grid-cols-[32px,160px,80px,40px] items-center h-9">
+                    <div key={camp.name} className="grid grid-cols-[32px,160px,80px,40px] items-center h-9 group">
                       <button
                         type="button"
                         onClick={() => handleRemoveCampaign(index)}
@@ -352,7 +352,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
-                      <span className="text-gray-600 pl-[2px]">{camp.name}</span>
+                      <span className="text-gray-600 pl-[2px] group-hover:text-red-600">{camp.name}</span>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
                         <input
@@ -413,7 +413,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                   <button
                     type="button"
                     onClick={() => setIsAddingCampaign(true)}
-                    className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center"
+                    className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center justify-self-start"
                   >
                     <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
