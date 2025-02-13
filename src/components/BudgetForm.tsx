@@ -311,7 +311,17 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                 // Percentage inputs with strict column alignment
                 <div className="space-y-1">
                   {campaignSplits.map((split, index) => (
-                    <div key={split.name} className="grid grid-cols-[160px,60px,24px,32px] items-center h-9">
+                    <div key={split.name} className="grid grid-cols-[32px,160px,60px,24px] items-center h-9">
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCampaign(index)}
+                        className="text-red-500 hover:text-red-700 focus:outline-none justify-self-center"
+                        aria-label="Remove campaign"
+                      >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
                       <span className="text-gray-600 pl-[2px]">{split.name}</span>
                       <input
                         type="number"
@@ -324,6 +334,14 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                         step="1"
                       />
                       <span className="text-gray-500 justify-self-center">%</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                // Budget inputs with strict column alignment
+                <div className="space-y-1">
+                  {campaignBudgets.map((camp, index) => (
+                    <div key={camp.name} className="grid grid-cols-[32px,160px,80px,40px] items-center h-9">
                       <button
                         type="button"
                         onClick={() => handleRemoveCampaign(index)}
@@ -334,14 +352,6 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                // Budget inputs with strict column alignment
-                <div className="space-y-1">
-                  {campaignBudgets.map((camp, index) => (
-                    <div key={camp.name} className="grid grid-cols-[160px,80px,40px,32px] items-center h-9">
                       <span className="text-gray-600 pl-[2px]">{camp.name}</span>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
@@ -356,16 +366,6 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                         />
                       </div>
                       <span className="text-gray-500">({camp.percentage}%)</span>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveCampaign(index)}
-                        className="text-red-500 hover:text-red-700 focus:outline-none justify-self-center"
-                        aria-label="Remove campaign"
-                      >
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
                     </div>
                   ))}
                 </div>
@@ -373,7 +373,8 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
 
               {/* Add Campaign Button aligned with campaign names */}
               {isAddingCampaign ? (
-                <div className="grid grid-cols-[160px,auto] items-center h-9 gap-2">
+                <div className="grid grid-cols-[32px,160px,auto] items-center h-9 gap-2">
+                  <div /> {/* Empty space for alignment */}
                   <input
                     type="text"
                     value={newCampaignName}
@@ -412,7 +413,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                   <button
                     type="button"
                     onClick={() => setIsAddingCampaign(true)}
-                    className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center pl-[2px]"
+                    className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center"
                   >
                     <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
