@@ -415,10 +415,12 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                     onClick={() => setIsAddingCampaign(true)}
                     className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center"
                   >
-                    <svg className="h-4 w-4 ml-[10px] mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span>Add Campaign</span>
+                    <div className="w-[32px] flex justify-center">
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                      </svg>
+                    </div>
+                    <span className="pl-1">Add Campaign</span>
                   </button>
                 </div>
               )}
