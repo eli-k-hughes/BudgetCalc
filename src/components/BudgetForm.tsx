@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { BudgetInputs, CampaignSplit } from '../types/budget';
@@ -16,6 +16,10 @@ const DEFAULT_CAMPAIGNS: CampaignSplit[] = [
   { name: 'Engagement', percentage: 20 },
 ];
 
+interface CampaignBudget extends CampaignSplit {
+  budget: number;
+}
+
 export function BudgetForm({ onSubmit, isLoading = false, error = null }: BudgetFormProps) {
   const [currentSpend, setCurrentSpend] = useState<string>('');
   const [totalMonthlyBudget, setTotalMonthlyBudget] = useState<string>('');
@@ -26,6 +30,39 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
     return date;
   });
   const [campaignSplits, setCampaignSplits] = useState<CampaignSplit[]>(DEFAULT_CAMPAIGNS);
+  const [inputMode, setInputMode] = useState<'percentage' | 'budget'>('percentage');
+  const [campaignBudgets, setCampaignBudgets] = useState<CampaignBudget[]>(
+    DEFAULT_CAMPAIGNS.map(camp => ({ ...camp, budget: 0 }))
+  );
+
+  // Calculate total budget from individual budgets
+  useEffect(() => {
+    if (inputMode === 'budget') {
+      const totalBudget = campaignBudgets.reduce((sum, camp) => sum + camp.budget, 0);
+      setTotalMonthlyBudget(totalBudget.toString());
+      
+      // Update percentages based on budgets
+      if (totalBudget > 0) {
+        const newSplits = campaignBudgets.map(camp => ({
+          name: camp.name,
+          percentage: Math.round((camp.budget / totalBudget) * 100),
+        }));
+        setCampaignSplits(newSplits);
+      }
+    }
+  }, [inputMode, campaignBudgets]);
+
+  // Update campaign budgets when total budget or splits change
+  useEffect(() => {
+    if (inputMode === 'percentage' && totalMonthlyBudget) {
+      const total = parseFloat(totalMonthlyBudget);
+      const newBudgets = campaignSplits.map(split => ({
+        ...split,
+        budget: (split.percentage / 100) * total,
+      }));
+      setCampaignBudgets(newBudgets);
+    }
+  }, [inputMode, totalMonthlyBudget, campaignSplits]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +85,15 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
       percentage: parseFloat(value) || 0,
     };
     setCampaignSplits(newSplits);
+  };
+
+  const handleCampaignBudgetChange = (index: number, value: string) => {
+    const newBudgets = [...campaignBudgets];
+    newBudgets[index] = {
+      ...newBudgets[index],
+      budget: parseFloat(value) || 0,
+    };
+    setCampaignBudgets(newBudgets);
   };
 
   const handleStartDateChange = (date: Date | null) => {
@@ -141,27 +187,73 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Campaign Splits (%)
-          </label>
+          <div className="flex justify-between items-center">
+            <label className="block text-sm font-medium text-gray-700">
+              Campaign Allocation
+            </label>
+            <div className="flex items-center space-x-4">
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  className="form-radio text-blue-600"
+                  checked={inputMode === 'percentage'}
+                  onChange={() => setInputMode('percentage')}
+                />
+                <span className="ml-2 text-sm text-gray-600">By Percentage</span>
+              </label>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  className="form-radio text-blue-600"
+                  checked={inputMode === 'budget'}
+                  onChange={() => setInputMode('budget')}
+                />
+                <span className="ml-2 text-sm text-gray-600">By Budget</span>
+              </label>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              {campaignSplits.map((split, index) => (
-                <div key={split.name} className="flex items-center space-x-2">
-                  <span className="w-24 text-sm text-gray-600">{split.name}</span>
-                  <input
-                    type="number"
-                    value={split.percentage}
-                    onChange={(e) => handleCampaignSplitChange(index, e.target.value)}
-                    className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    required
-                    min="0"
-                    max="100"
-                    step="1"
-                  />
-                  <span className="text-sm text-gray-500">%</span>
-                </div>
-              ))}
+              {inputMode === 'percentage' ? (
+                // Percentage inputs
+                campaignSplits.map((split, index) => (
+                  <div key={split.name} className="flex items-center space-x-2">
+                    <span className="w-24 text-sm text-gray-600">{split.name}</span>
+                    <input
+                      type="number"
+                      value={split.percentage}
+                      onChange={(e) => handleCampaignSplitChange(index, e.target.value)}
+                      className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      required
+                      min="0"
+                      max="100"
+                      step="1"
+                    />
+                    <span className="text-sm text-gray-500">%</span>
+                  </div>
+                ))
+              ) : (
+                // Budget inputs
+                campaignBudgets.map((camp, index) => (
+                  <div key={camp.name} className="flex items-center space-x-2">
+                    <span className="w-24 text-sm text-gray-600">{camp.name}</span>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                      <input
+                        type="number"
+                        value={camp.budget}
+                        onChange={(e) => handleCampaignBudgetChange(index, e.target.value)}
+                        className="block w-28 pl-7 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        required
+                        min="0"
+                        step="0.01"
+                      />
+                    </div>
+                    <span className="text-sm text-gray-500">({camp.percentage}%)</span>
+                  </div>
+                ))
+              )}
             </div>
             <div className="flex items-center justify-center">
               <PieChart splits={campaignSplits} size="small" />
