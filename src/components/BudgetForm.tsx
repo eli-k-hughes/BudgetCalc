@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { BudgetInputs, CampaignSplit } from '../types/budget';
 import { PieChart } from './PieChart';
+import { formatCurrency } from '../utils/budgetCalculator';
 
 interface BudgetFormProps {
   onSubmit: (inputs: BudgetInputs) => void;
@@ -15,6 +16,8 @@ const DEFAULT_CAMPAIGNS: CampaignSplit[] = [
   { name: 'Conversions', percentage: 40 },
   { name: 'Engagement', percentage: 20 },
 ];
+
+const MAX_BUDGET = 1000000; // $1M maximum budget validation
 
 interface CampaignBudget extends CampaignSplit {
   budget: number;
@@ -34,6 +37,9 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
   const [campaignBudgets, setCampaignBudgets] = useState<CampaignBudget[]>(
     DEFAULT_CAMPAIGNS.map(camp => ({ ...camp, budget: 0 }))
   );
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [newCampaignName, setNewCampaignName] = useState('');
+  const [isAddingCampaign, setIsAddingCampaign] = useState(false);
 
   // Calculate total budget from individual budgets
   useEffect(() => {
@@ -64,8 +70,28 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
     }
   }, [inputMode, totalMonthlyBudget, campaignSplits]);
 
+  const validateBudgets = (budgets: CampaignBudget[]): boolean => {
+    const total = budgets.reduce((sum, camp) => sum + camp.budget, 0);
+    if (total > MAX_BUDGET) {
+      setValidationError(`Total budget cannot exceed ${formatCurrency(MAX_BUDGET)}`);
+      return false;
+    }
+    setValidationError(null);
+    return true;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (inputMode === 'budget' && !validateBudgets(campaignBudgets)) {
+      return;
+    }
+
+    const totalPercentage = campaignSplits.reduce((sum, split) => sum + split.percentage, 0);
+    if (Math.abs(totalPercentage - 100) > 0.01) {
+      setValidationError('Total percentage must equal 100%');
+      return;
+    }
     
     const inputs: BudgetInputs = {
       currentSpend: parseFloat(currentSpend),
@@ -75,6 +101,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
       campaignSplits,
     };
 
+    setValidationError(null);
     onSubmit(inputs);
   };
 
@@ -94,6 +121,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
       budget: parseFloat(value) || 0,
     };
     setCampaignBudgets(newBudgets);
+    validateBudgets(newBudgets);
   };
 
   const handleStartDateChange = (date: Date | null) => {
@@ -114,6 +142,64 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
     }
   };
 
+  const handleAddCampaign = () => {
+    if (!newCampaignName.trim()) {
+      setValidationError('Please enter a campaign name');
+      return;
+    }
+
+    const existingCampaign = campaignSplits.find(
+      camp => camp.name.toLowerCase() === newCampaignName.trim().toLowerCase()
+    );
+    if (existingCampaign) {
+      setValidationError('A campaign with this name already exists');
+      return;
+    }
+
+    const newCampaign = { name: newCampaignName.trim(), percentage: 0 };
+    const newSplits = [...campaignSplits, newCampaign];
+    
+    // Redistribute percentages
+    const equalShare = Math.floor(100 / newSplits.length);
+    const remainder = 100 - (equalShare * newSplits.length);
+    
+    newSplits.forEach((split, index) => {
+      split.percentage = equalShare + (index === 0 ? remainder : 0);
+    });
+
+    setCampaignSplits(newSplits);
+    setCampaignBudgets(prev => [
+      ...prev,
+      { ...newCampaign, budget: 0 },
+    ]);
+
+    setNewCampaignName('');
+    setIsAddingCampaign(false);
+    setValidationError(null);
+  };
+
+  const handleRemoveCampaign = (index: number) => {
+    if (campaignSplits.length <= 2) {
+      setValidationError('Must have at least two campaign objectives');
+      return;
+    }
+
+    const newSplits = campaignSplits.filter((_, i) => i !== index);
+    const removedPercentage = campaignSplits[index].percentage;
+    
+    // Redistribute the removed percentage
+    const distributePer = Math.floor(removedPercentage / newSplits.length);
+    const remainder = removedPercentage - (distributePer * newSplits.length);
+    
+    newSplits.forEach((split, i) => {
+      split.percentage += distributePer + (i === 0 ? remainder : 0);
+    });
+
+    setCampaignSplits(newSplits);
+    setCampaignBudgets(prev => prev.filter((_, i) => i !== index));
+    setValidationError(null);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">Budget Calculator</h2>
@@ -121,6 +207,12 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
       {error && (
         <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
           <p className="text-red-700">{error}</p>
+        </div>
+      )}
+
+      {validationError && (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+          <p className="text-red-700">{validationError}</p>
         </div>
       )}
 
@@ -231,6 +323,15 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                       step="1"
                     />
                     <span className="text-sm text-gray-500">%</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCampaign(index)}
+                      className="text-red-500 hover:text-red-700 focus:outline-none"
+                    >
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
                 ))
               ) : (
@@ -251,8 +352,58 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                       />
                     </div>
                     <span className="text-sm text-gray-500">({camp.percentage}%)</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCampaign(index)}
+                      className="text-red-500 hover:text-red-700 focus:outline-none"
+                    >
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
                 ))
+              )}
+
+              {/* Add Campaign Button and Form */}
+              {isAddingCampaign ? (
+                <div className="flex items-center space-x-2 mt-2">
+                  <input
+                    type="text"
+                    value={newCampaignName}
+                    onChange={(e) => setNewCampaignName(e.target.value)}
+                    placeholder="Campaign name"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddCampaign}
+                    className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    Add
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAddingCampaign(false);
+                      setNewCampaignName('');
+                    }}
+                    className="px-3 py-1 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsAddingCampaign(true)}
+                  className="flex items-center space-x-1 text-sm text-blue-600 hover:text-blue-800 focus:outline-none"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Add Campaign</span>
+                </button>
               )}
             </div>
             <div className="flex items-center justify-center">
