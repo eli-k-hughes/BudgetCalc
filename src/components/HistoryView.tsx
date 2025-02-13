@@ -68,9 +68,8 @@ export function HistoryView({ storedCalculations, onClearHistory }: HistoryViewP
 
             <div className="mt-2 pt-2 border-t">
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-sm text-gray-600 mb-1">Campaign Splits</div>
-                  <PieChart splits={calc.inputs.campaignSplits} size="small" />
+                <div className="flex items-center">
+                  <PieChart splits={calc.inputs.campaignSplits} size="tiny" />
                 </div>
                 <div className="flex items-center">
                   <div className="text-sm text-gray-500">

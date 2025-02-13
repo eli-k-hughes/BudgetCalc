@@ -6,7 +6,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface PieChartProps {
   splits: { name: string; percentage: number }[];
-  size?: 'small' | 'large';
+  size?: 'tiny' | 'small' | 'large';
 }
 
 export function PieChart({ splits, size = 'small' }: PieChartProps) {
@@ -48,7 +48,11 @@ export function PieChart({ splits, size = 'small' }: PieChartProps) {
   };
 
   return (
-    <div className={size === 'small' ? 'w-32 h-32' : 'w-48 h-48'}>
+    <div className={
+      size === 'tiny' ? 'w-24 h-24' : 
+      size === 'small' ? 'w-32 h-32' : 
+      'w-48 h-48'
+    }>
       <Pie data={data} options={options} />
     </div>
   );
