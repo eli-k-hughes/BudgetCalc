@@ -315,19 +315,19 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                       <button
                         type="button"
                         onClick={() => handleRemoveCampaign(index)}
-                        className="text-red-500 hover:text-red-700 focus:outline-none justify-self-center"
+                        className="text-red-500 hover:text-red-700 focus:outline-none focus:ring-0 justify-self-center"
                         aria-label="Remove campaign"
                       >
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
-                      <span className="text-gray-600 pl-[2px] group-hover:text-red-600">{split.name}</span>
+                      <span className="text-gray-600 pl-1 group-hover:text-red-600">{split.name}</span>
                       <input
                         type="number"
                         value={split.percentage}
                         onChange={(e) => handleCampaignSplitChange(index, e.target.value)}
-                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-1"
                         required
                         min="0"
                         max="100"
@@ -345,21 +345,21 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                       <button
                         type="button"
                         onClick={() => handleRemoveCampaign(index)}
-                        className="text-red-500 hover:text-red-700 focus:outline-none justify-self-center"
+                        className="text-red-500 hover:text-red-700 focus:outline-none focus:ring-0 justify-self-center"
                         aria-label="Remove campaign"
                       >
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
-                      <span className="text-gray-600 pl-[2px] group-hover:text-red-600">{camp.name}</span>
+                      <span className="text-gray-600 pl-1 group-hover:text-red-600">{camp.name}</span>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
                         <input
                           type="number"
                           value={camp.budget}
                           onChange={(e) => handleCampaignBudgetChange(index, e.target.value)}
-                          className="w-full pl-7 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          className="w-full pl-7 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-1"
                           required
                           min="0"
                           step="0.01"
@@ -413,9 +413,9 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                   <button
                     type="button"
                     onClick={() => setIsAddingCampaign(true)}
-                    className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center justify-self-start"
+                    className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center"
                   >
-                    <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-4 w-4 ml-[10px] mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                     </svg>
                     <span>Add Campaign</span>
