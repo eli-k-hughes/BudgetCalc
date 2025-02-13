@@ -280,7 +280,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
 
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 pl-[2px]">
               Campaign Allocation
             </label>
             <div className="flex items-center space-x-4">
@@ -311,8 +311,8 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                 // Percentage inputs with strict column alignment
                 <div className="space-y-2">
                   {campaignSplits.map((split, index) => (
-                    <div key={split.name} className="grid grid-cols-[180px,50px,24px,32px] items-center h-9">
-                      <span className="text-gray-600">{split.name}</span>
+                    <div key={split.name} className="grid grid-cols-[200px,80px,40px,40px] items-center h-9">
+                      <span className="text-gray-600 pl-[2px]">{split.name}</span>
                       <input
                         type="number"
                         value={split.percentage}
@@ -341,8 +341,8 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                 // Budget inputs with strict column alignment
                 <div className="space-y-2">
                   {campaignBudgets.map((camp, index) => (
-                    <div key={camp.name} className="grid grid-cols-[180px,100px,50px,32px] items-center h-9">
-                      <span className="text-gray-600">{camp.name}</span>
+                    <div key={camp.name} className="grid grid-cols-[200px,100px,60px,40px] items-center h-9">
+                      <span className="text-gray-600 pl-[2px]">{camp.name}</span>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
                         <input
@@ -373,7 +373,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
 
               {/* Add Campaign Button aligned with campaign names */}
               {isAddingCampaign ? (
-                <div className="grid grid-cols-[180px,auto] items-center h-9 gap-2">
+                <div className="grid grid-cols-[200px,auto] items-center h-9 gap-2">
                   <input
                     type="text"
                     value={newCampaignName}
@@ -412,7 +412,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                   <button
                     type="button"
                     onClick={() => setIsAddingCampaign(true)}
-                    className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center"
+                    className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center pl-[2px]"
                   >
                     <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -422,7 +422,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                 </div>
               )}
             </div>
-            <div className="flex items-start justify-center pt-2">
+            <div className="flex items-start justify-end pt-2">
               <PieChart splits={campaignSplits} size="small" />
             </div>
           </div>
