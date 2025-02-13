@@ -305,13 +305,13 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
             </div>
           </div>
 
-          <div className="grid grid-cols-[1fr,auto] gap-8">
-            <div className="space-y-3">
+          <div className="grid grid-cols-[1fr,auto] gap-4">
+            <div className="space-y-2">
               {inputMode === 'percentage' ? (
                 // Percentage inputs with strict column alignment
                 <div className="space-y-2">
                   {campaignSplits.map((split, index) => (
-                    <div key={split.name} className="grid grid-cols-[180px,80px,40px,40px] items-center h-9">
+                    <div key={split.name} className="grid grid-cols-[180px,50px,24px,32px] items-center h-9">
                       <span className="text-gray-600">{split.name}</span>
                       <input
                         type="number"
@@ -341,7 +341,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                 // Budget inputs with strict column alignment
                 <div className="space-y-2">
                   {campaignBudgets.map((camp, index) => (
-                    <div key={camp.name} className="grid grid-cols-[180px,120px,60px,40px] items-center h-9">
+                    <div key={camp.name} className="grid grid-cols-[180px,100px,50px,32px] items-center h-9">
                       <span className="text-gray-600">{camp.name}</span>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
@@ -408,16 +408,18 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                   </div>
                 </div>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsAddingCampaign(true)}
-                  className="flex items-center text-blue-600 hover:text-blue-800 focus:outline-none h-9 ml-0"
-                >
-                  <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                  </svg>
-                  <span>Add Campaign</span>
-                </button>
+                <div className="h-9 flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingCampaign(true)}
+                    className="text-blue-600 hover:text-blue-800 focus:outline-none flex items-center"
+                  >
+                    <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>Add Campaign</span>
+                  </button>
+                </div>
               )}
             </div>
             <div className="flex items-start justify-center pt-2">
