@@ -1,6 +1,7 @@
 import React from 'react';
 import { StoredCalculations } from '../types/budget';
 import { formatCurrency } from '../utils/budgetCalculator';
+import { PieChart } from './PieChart';
 
 interface HistoryViewProps {
   storedCalculations: StoredCalculations;
@@ -61,19 +62,25 @@ export function HistoryView({ storedCalculations, onClearHistory }: HistoryViewP
               </div>
               <div>
                 <span className="text-gray-600">Days Remaining:</span>
-                <span className="ml-2 font-medium">{calc.inputs.daysRemaining}</span>
+                <span className="ml-2 font-medium">{calc.result.daysRemaining}</span>
               </div>
             </div>
 
             <div className="mt-2 pt-2 border-t">
-              <div className="text-sm text-gray-600">Campaign Splits:</div>
-              <div className="grid grid-cols-2 gap-2 mt-1">
-                {calc.inputs.campaignSplits.map((split) => (
-                  <div key={split.name} className="text-sm">
-                    <span className="text-gray-600">{split.name}:</span>
-                    <span className="ml-1 font-medium">{split.percentage}%</span>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-gray-600 mb-1">Campaign Splits</div>
+                  <PieChart splits={calc.inputs.campaignSplits} size="small" />
+                </div>
+                <div className="flex items-center">
+                  <div className="text-sm text-gray-500">
+                    {calc.inputs.campaignSplits.map((split) => (
+                      <div key={split.name}>
+                        {split.name}: {split.percentage}%
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
             </div>
           </div>

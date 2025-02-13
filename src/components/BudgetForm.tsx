@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { BudgetInputs, CampaignSplit } from '../types/budget';
+import { PieChart } from './PieChart';
 
 interface BudgetFormProps {
   onSubmit: (inputs: BudgetInputs) => void;
@@ -143,22 +144,29 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
           <label className="block text-sm font-medium text-gray-700">
             Campaign Splits (%)
           </label>
-          {campaignSplits.map((split, index) => (
-            <div key={split.name} className="flex items-center space-x-2">
-              <span className="w-24 text-sm text-gray-600">{split.name}</span>
-              <input
-                type="number"
-                value={split.percentage}
-                onChange={(e) => handleCampaignSplitChange(index, e.target.value)}
-                className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-                min="0"
-                max="100"
-                step="1"
-              />
-              <span className="text-sm text-gray-500">%</span>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              {campaignSplits.map((split, index) => (
+                <div key={split.name} className="flex items-center space-x-2">
+                  <span className="w-24 text-sm text-gray-600">{split.name}</span>
+                  <input
+                    type="number"
+                    value={split.percentage}
+                    onChange={(e) => handleCampaignSplitChange(index, e.target.value)}
+                    className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    required
+                    min="0"
+                    max="100"
+                    step="1"
+                  />
+                  <span className="text-sm text-gray-500">%</span>
+                </div>
+              ))}
             </div>
-          ))}
+            <div className="flex items-center justify-center">
+              <PieChart splits={campaignSplits} size="small" />
+            </div>
+          </div>
         </div>
 
         <button

@@ -34,13 +34,13 @@ export function ResultsDisplay({ calculation }: ResultsDisplayProps) {
             <span className="text-gray-600">Start Date:</span>
             <span className="ml-2 font-medium">{formatDate(result.startDate)}</span>
           </div>
-          <div>
-            <span className="text-gray-600">End Date:</span>
-            <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <div>
+              <span className="text-gray-600">End Date:</span>
               <span className="ml-2 font-medium">{formatDate(result.endDate)}</span>
-              <span className="text-sm text-blue-600">
-                ({daysFromToday} days from today)
-              </span>
+            </div>
+            <div className="text-sm text-blue-600 ml-[4.5rem]">
+              ({daysFromToday} days from today)
             </div>
           </div>
           <div className="col-span-2">
