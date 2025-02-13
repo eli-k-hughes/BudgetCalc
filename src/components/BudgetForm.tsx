@@ -305,13 +305,13 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
             </div>
           </div>
 
-          <div className="grid grid-cols-[1fr,auto] gap-4">
-            <div className="space-y-2">
+          <div className="grid grid-cols-[1fr,auto] gap-2">
+            <div className="space-y-1">
               {inputMode === 'percentage' ? (
                 // Percentage inputs with strict column alignment
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {campaignSplits.map((split, index) => (
-                    <div key={split.name} className="grid grid-cols-[200px,80px,40px,40px] items-center h-9">
+                    <div key={split.name} className="grid grid-cols-[160px,60px,24px,32px] items-center h-9">
                       <span className="text-gray-600 pl-[2px]">{split.name}</span>
                       <input
                         type="number"
@@ -339,9 +339,9 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                 </div>
               ) : (
                 // Budget inputs with strict column alignment
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {campaignBudgets.map((camp, index) => (
-                    <div key={camp.name} className="grid grid-cols-[200px,100px,60px,40px] items-center h-9">
+                    <div key={camp.name} className="grid grid-cols-[160px,80px,40px,32px] items-center h-9">
                       <span className="text-gray-600 pl-[2px]">{camp.name}</span>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
@@ -373,7 +373,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
 
               {/* Add Campaign Button aligned with campaign names */}
               {isAddingCampaign ? (
-                <div className="grid grid-cols-[200px,auto] items-center h-9 gap-2">
+                <div className="grid grid-cols-[160px,auto] items-center h-9 gap-2">
                   <input
                     type="text"
                     value={newCampaignName}
@@ -422,7 +422,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                 </div>
               )}
             </div>
-            <div className="flex items-start justify-end pt-2">
+            <div className="flex items-start justify-end">
               <PieChart splits={campaignSplits} size="small" />
             </div>
           </div>
