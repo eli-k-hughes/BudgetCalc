@@ -305,29 +305,29 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-[1fr,auto] gap-8">
             <div className="space-y-3">
               {inputMode === 'percentage' ? (
-                // Percentage inputs
-                campaignSplits.map((split, index) => (
-                  <div key={split.name} className="flex items-center h-9">
-                    <span className="w-32 text-gray-600">{split.name}</span>
-                    <div className="flex items-center">
+                // Percentage inputs with strict column alignment
+                <div className="space-y-2">
+                  {campaignSplits.map((split, index) => (
+                    <div key={split.name} className="grid grid-cols-[180px,80px,40px,40px] items-center h-9">
+                      <span className="text-gray-600">{split.name}</span>
                       <input
                         type="number"
                         value={split.percentage}
                         onChange={(e) => handleCampaignSplitChange(index, e.target.value)}
-                        className="w-20 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         required
                         min="0"
                         max="100"
                         step="1"
                       />
-                      <span className="w-8 text-gray-500 ml-2">%</span>
+                      <span className="text-gray-500 justify-self-center">%</span>
                       <button
                         type="button"
                         onClick={() => handleRemoveCampaign(index)}
-                        className="text-red-500 hover:text-red-700 focus:outline-none ml-2"
+                        className="text-red-500 hover:text-red-700 focus:outline-none justify-self-center"
                         aria-label="Remove campaign"
                       >
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -335,31 +335,31 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                         </svg>
                       </button>
                     </div>
-                  </div>
-                ))
+                  ))}
+                </div>
               ) : (
-                // Budget inputs
-                campaignBudgets.map((camp, index) => (
-                  <div key={camp.name} className="flex items-center h-9">
-                    <span className="w-32 text-gray-600">{camp.name}</span>
-                    <div className="flex items-center">
+                // Budget inputs with strict column alignment
+                <div className="space-y-2">
+                  {campaignBudgets.map((camp, index) => (
+                    <div key={camp.name} className="grid grid-cols-[180px,120px,60px,40px] items-center h-9">
+                      <span className="text-gray-600">{camp.name}</span>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
                         <input
                           type="number"
                           value={camp.budget}
                           onChange={(e) => handleCampaignBudgetChange(index, e.target.value)}
-                          className="w-24 pl-7 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          className="w-full pl-7 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                           required
                           min="0"
                           step="0.01"
                         />
                       </div>
-                      <span className="text-gray-500 w-16 ml-2">({camp.percentage}%)</span>
+                      <span className="text-gray-500">({camp.percentage}%)</span>
                       <button
                         type="button"
                         onClick={() => handleRemoveCampaign(index)}
-                        className="text-red-500 hover:text-red-700 focus:outline-none ml-2"
+                        className="text-red-500 hover:text-red-700 focus:outline-none justify-self-center"
                         aria-label="Remove campaign"
                       >
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -367,23 +367,21 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                         </svg>
                       </button>
                     </div>
-                  </div>
-                ))
+                  ))}
+                </div>
               )}
 
-              {/* Add Campaign Button */}
+              {/* Add Campaign Button aligned with campaign names */}
               {isAddingCampaign ? (
-                <div className="flex items-center h-9">
-                  <div className="w-32">
-                    <input
-                      type="text"
-                      value={newCampaignName}
-                      onChange={(e) => setNewCampaignName(e.target.value)}
-                      placeholder="Campaign name"
-                      className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div className="flex items-center ml-2">
+                <div className="grid grid-cols-[180px,auto] items-center h-9 gap-2">
+                  <input
+                    type="text"
+                    value={newCampaignName}
+                    onChange={(e) => setNewCampaignName(e.target.value)}
+                    placeholder="Campaign name"
+                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <div className="flex items-center space-x-2">
                     <button
                       type="button"
                       onClick={handleAddCampaign}
@@ -400,7 +398,7 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                         setIsAddingCampaign(false);
                         setNewCampaignName('');
                       }}
-                      className="text-red-500 hover:text-red-700 focus:outline-none ml-2"
+                      className="text-red-500 hover:text-red-700 focus:outline-none"
                       aria-label="Cancel add campaign"
                     >
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -413,16 +411,16 @@ export function BudgetForm({ onSubmit, isLoading = false, error = null }: Budget
                 <button
                   type="button"
                   onClick={() => setIsAddingCampaign(true)}
-                  className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 focus:outline-none h-9"
+                  className="flex items-center text-blue-600 hover:text-blue-800 focus:outline-none h-9 ml-0"
                 >
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                   </svg>
                   <span>Add Campaign</span>
                 </button>
               )}
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-start justify-center pt-2">
               <PieChart splits={campaignSplits} size="small" />
             </div>
           </div>
